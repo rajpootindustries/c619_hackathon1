@@ -19,7 +19,6 @@ header{
   width: 810px;
   position: relative;
   border: 1px solid green;
-  /* float: left; */
   margin: 0 auto;
   display: block;
   background-color: rgb(93, 93, 255);
@@ -30,8 +29,6 @@ header{
   height: 40px;
   background-color: chartreuse;
   position: relative;
-  /* left:5%;
-  bottom: 1px; */
   margin: 10px auto;
   display: block;
   margin: 4px auto;
@@ -64,28 +61,22 @@ header{
   float: left;
   position: relative;
   margin:1px;
-
-
-}
-
-.tile > *{
-  height: 100%;
-  width: 100%;
-  position: absolute;
 }
 .leaf{
   background-color: rgb(33, 180, 33);
   border-radius: 15px;
+  height: 100%;
+  width: 100%;
+  position: absolute;
 }
 .frog{
   height: 60%;
   width: 60%;
-  /* background-color: aquamarine; */
   border-radius: 50%;
   left: 19px;
   top: 19px;
   background-size: 100%;
-  /* background-image: url(../images/red.png); */
+  position: absolute;
 }
 
 .red {
@@ -109,9 +100,7 @@ header{
 }
 
 .choice {
-    /* background-color: greenyellow; */
     animation: pulse 2s infinite;
-
 }
 
 @keyframes pulse {
@@ -130,8 +119,6 @@ header{
 .center.choice {
     background-color: rgb(245, 196, 105);
 }
-
-/* modal elements */
 #modalShadow{
   position: fixed;
   left: 0;
@@ -153,7 +140,6 @@ header{
   background-image: url(../images/hypnoToad.gif);
   background-position: cover;
   background-repeat: no-repeat;
-  /* display: flex; */
 }
 #modalMessage{
   font-size: 200%;
