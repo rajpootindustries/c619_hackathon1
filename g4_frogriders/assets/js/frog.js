@@ -4,8 +4,7 @@ class Frog {
         this.row = null;
         this.col = null;
         this.domElement = $(domElement);
-        this.handleClick = this.handleClick.bind(this);
-        // $('.tile').on('click', '.frog', this.handleClick );
+        this.caught = false;
     }
     getColor(){
         return this.color;
@@ -18,16 +17,15 @@ class Frog {
     getPosition(){
         return {row: this.row, col: this.col};
     }
-    handleClick(){
-        console.log(this)
-
-    }
-    setClickHandler(frog) {
-        this.handleClick = this.handleClick.bind(this);
-        $('.tile').on('click', frog, this.handleClick );
-    }
 
     getFrog() {
         return $('<div>').addClass("frog " + this.color);
+    }
+
+    tag() {
+        this.row = null;
+        this.col = null;
+        this.domElement = null;
+        this.caught = true;
     }
 }

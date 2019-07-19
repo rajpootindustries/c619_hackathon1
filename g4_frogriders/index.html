@@ -7,36 +7,121 @@
     <link href="https://fonts.googleapis.com/css?family=Concert+One&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src = 'assets/js/modal.js'></script>
     <script src="assets/js/frog.js"></script>
+    <script src="assets/js/privateCard.js"></script>
+    <script src="assets/js/publicCard.js"></script>
+    <script src="assets/js/privilageCard.js"></script>
+    <script src="assets/js/cards.js"></script>
+    <script src="assets/js/deck.js"></script>
+    <script src="assets/js/village.js"></script>
     <script src="assets/js/player.js"></script>
     <script src="assets/js/board.js"></script>
     <script src="assets/js/main.js"></script>
 
 
     <title>Frogriders</title>
-
+    <!-- <link rel="stylesheet" href="../frogriders/assets/css/style.css"> -->
 </head>
 <body>
     <header>Frogrider Online!</header>
-    <div class="gameBoard">
+    
+    <div class="cards">
+        <div class="card-slot"></div>
+        <div class="card-slot"></div>
+        <div class="card-slot"></div>
+        <div class="card-slot"></div>
+        <div class="card-slot"></div>
+        <div class="card-slot"></div>
+    </div>
+    <div class="boardContainer">
+        <div class="gameBoard"></div>
+    </div>
+    
 
+    <div class="pond-container">
+        <div class="pond-area">
+                Village
+            <div class="puddle-container">
+                <div class="red" id="red-pond"></div>
+                <div id="villageRed">0</div>
+            </div>
+            <div class="puddle-container">
+                <div class="yellow" id="yellow-pond"></div>
+                <div id="villageYellow">0</div>
+            </div>
+            <div class="puddle-container">
+                <div class="blue" id="blue-pond"></div>
+                <div id="villageBlue">0</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="fan-cards">
+        <div class="fan-player1"></div>
+            <div id="fan-player1"></div>
+        <div class="fan-player2"></div>
+            <div id="fan-player2"></div>
+        <div class="fan-player3"></div>
+            <div id="fan-player3"></div>
+        <div class="fan-player4"></div>
+            <div id="fan-player4"></div>
     </div>
 
     <div class="stats">
-        <div class="player1">
+        <div class="player">
+            Player 1
             <div id="player1"></div>
         </div>
-        <div class="player2">
+        <div class="player">
+            Player 2
+            <div id="player2"></div>
+        </div>
+        <div class="player">
+            Player 3
+            <div id="player2"></div>
+        </div>
+        <div class="player">
+            Player 4
             <div id="player2"></div>
         </div>
     </div>
 
-    <div id="modalShadow"></div>
-    <div id="modalBody">
-        <div id="modalMessage"></div>
-        <button id="modalButton">Play Again?</button>
+    <!-- modal  -->
+    <div class="endgame" id="modalShadow"></div>
+    <div class="endgame" id="modalBody">
+        <div class="endgame" id="modalMessage">
+            Score
+        </div>
+        <button class="endgame" id="modalButton">Play Again?</button>
     </div>
+
+
+    <div class="rechoose shadow">
+        <div class="rechoose frog-select">
+            <div class="rechoose header">Choose a frog from village</div>
+            <div class="frog-choose">
+                <button class="choose choose-red"></button>
+                <button class="choose choose-yellow"></button>
+                <button class="choose choose-blue"></button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- village select -->
+    <div class="village shadow"> 
+        
+        <div class="village frog-select">
+                <div class="village header">Phase 2: Choose a frog or skip</div>
+                <div class="frog-options">
+                    <button class="pick pick-red"></button>
+                    <button class="pick pick-yellow"></button>
+                    <button class="pick pick-blue"></button>
+                </div>
+                <button class="village-exit">Skip</button>
+        </div>
+    </div>
+
+
 
 
 </body>

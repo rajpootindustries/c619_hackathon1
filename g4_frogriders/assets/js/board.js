@@ -1,28 +1,25 @@
 class Board {
-    constructor(players) {
+    constructor() {
         this.board = [];
         this.rows = 9;
         this.columns = 9;
-        this.removedFrogs = {"red": null, "blue": null, "yellow": null, "brown": null};
         this.playerArray = [];
         this.currentPlayer = 0;
         this.possibleActions = [];
         this.firstSelectedFrog = null;
-        this.modal = new Modal('#modalShadow', "#modalBody", "#modalMessage", "#modalButton");
-        
-        this.initializeApp = initializeApp;
-        this.addPlayers(players);
-        this.initializeBoard();
+        this.frogsThisTurn = [];
+        this.village = new Village();
+        this.deck = new Deck();
+
     }
 
-    initializeBoard() {
+    intializeBoard() {
         //clear old board
         $('.gameBoard').empty()
-        this.modal.init();
 
         //populates board by creating a 2d array representind the board on the DOM
         for(var col = 0; col < this.columns; col++) {
-            this.board.push(new Array(this.rows))
+            this.board.push(new Array(this.row))
         }
 
         // var tileContainer = $('<div>').addClass('tileContainer')
@@ -51,28 +48,42 @@ class Board {
                 $('.gameBoard').append(tile);
 
             }
+
         }
+
+        //create win/lose (reset) modal
+        var endModal = $('<div>').addClass('endModal');
+
+
         this.handleCellClick = this.handleCellClick.bind(this);
         $('.tile').on('click', '.leaf', this.handleCellClick);
         $('.tile').on('click', '.frog', this.handleCellClick);
+
         //initialize players
+        $('#player' + (this.currentPlayer+1)).addClass('currentPlayer')
         // this.currentPlayer = 0;
     }
 
 
-    addPlayers(players) {
-        for(var i = 0; i < players.length; i++) {
-            this.playerArray.push(new Player(players[i]));
-        }
+    addPlayer(player) {
+        this.playerArray.push(new Player(player));
+        //adds player to the beginning of game
+        //change the names of the players
+        //returns nothing
+
     }
 
     alternatePlayer() {
+        //gets the next player and sets it as current player
+        //returns nothing
         if(this.currentPlayer < this.playerArray.length-1) {
             this.currentPlayer++;
         }
         else {
             this.currentPlayer = 0;
         }
+        $('div[id^="player"]').removeClass('currentPlayer');
+        $('#player' + (this.currentPlayer+1)).addClass('currentPlayer')
 
     }
 
@@ -80,6 +91,7 @@ class Board {
         var tile = event.currentTarget
         var col = parseInt($(tile).attr('data-col'));
         var row = parseInt($(tile).attr('data-row'));
+        
 
         if(this.possibleActions.length === 0) {
             var clickedFrog = this.board[row][col];
@@ -93,70 +105,238 @@ class Board {
         }
         else {
             //click on one of the possible actions
+            //if tile is one of the possible actions remove frog in between
             for (var i = 0; i < this.possibleActions.length; i++) {
                 var action_row = this.possibleActions[i]['target'][0];
                 var action_col = this.possibleActions[i]['target'][1];
-
+                // console.log(action_row, row, action_col, col);
                 if(action_row === row && action_col === col) {
-                    console.log('clicked right one');
 
                     var target_row = this.possibleActions[i]['middle'][0];
                     var target_col = this.possibleActions[i]['middle'][1];
-
-                    //give the points of the frog
+                    //give frog to player, or the points of the frog
                     var removedFrog = this.popFrog(this.board[target_row][target_col]);
+                    removedFrog.tag();
+
+                    //clear 
                     this.possibleActions = [];
+                    this.frogsThisTurn.push(removedFrog);
                     this.playerArray[this.currentPlayer].setFrogBag( removedFrog.getColor() );
-                    console.log(removedFrog.getColor());
 
                     //move frog
                     var frogThatJumped = this.popFrog(this.firstSelectedFrog);
                     this.setFrog(frogThatJumped, action_row, action_col)
 
+                    $('#player' + (this.currentPlayer+1)).text(this.playerArray[this.currentPlayer].calculateScore());
+
                     if(this.board[action_row][action_col] && this.findValidMoves(this.board[action_row][action_col]) ) {
                         this.clearTiles();
                         this.colorTiles();
-                        $('#player' + (this.currentPlayer+1)).text(this.playerArray[this.currentPlayer].calculateScore());
                     }
                     else {
                         this.clearTiles();
+                        //clear coloring
 
-                        $('#player'+(this.currentPlayer+1)).text(this.playerArray[this.currentPlayer].calculateScore());
-                        this.alternatePlayer();
+                        //phase 2
+                        var reroll = this.phasetwo(this.frogsThisTurn);
+                        //change player
+                        
 
                     }
                 }
                 else {
-                    // clicked invalid tile
+                    //clicked wrong tile
                 }
             }
         }
 
         if(this.winCondition()){
-            this.modal.updateMessage('Player One Wins');
-            this.modal.show();
+            //endgame, modal
+            $('.endgame').show();
         }
     }
 
+    phasetwo(froglist) {
+        var selector = $(".frog-options");
+        selector.empty();
+        var availableFrogColors = this.colorsInFroglist(froglist);
+        var noVillageFrogs = true;
+
+        if (availableFrogColors.red) {
+            selector.append($('<button>').addClass("pick pick-red"));
+            noVillageFrogs = false;
+        }
+        if (availableFrogColors.yellow) {
+            selector.append($('<button>').addClass("pick pick-yellow"));
+            noVillageFrogs = false;
+        }
+        if (availableFrogColors.blue) {
+            selector.append($('<button>').addClass("pick pick-blue"));
+            noVillageFrogs = false;
+        }
+
+        if(noVillageFrogs) {
+            this.keepFrogs();
+        }
+        else {
+            $('.village').show();
+            this.placeRedFrogInVillage = this.placeRedFrogInVillage.bind(this);
+            this.placeBlueFrogInVillage = this.placeBlueFrogInVillage.bind(this);
+            this.placeYellowFrogInVillage = this.placeYellowFrogInVillage.bind(this);
+            this.keepFrogs = this.keepFrogs.bind(this);
+            $('.pick-red').on("click", this.placeRedFrogInVillage);
+            $('.pick-blue').on("click", this.placeBlueFrogInVillage);
+            $('.pick-yellow').on("click", this.placeYellowFrogInVillage);
+            $('.village-exit').on("click", this.keepFrogs);
+        }
+
+        
+    }
+    getFrogByColorThisTurn(color) {
+        for(var i = 0; i < this.frogsThisTurn.length; i++) {
+            if(this.frogsThisTurn[i].color === color) {
+                var frog = this.frogsThisTurn[i];
+                this.frogsThisTurn.splice(i, 1);
+                console.log(this.frogsThisTurn, frog)
+                return frog;
+            }
+        }
+        return null
+    }
+
+    bagFrogs() {
+        while(this.frogsThisTurn.length > 0) {
+            this.playerArray[this.currentPlayer].keep(this.frogsThisTurn.shift());
+        }
+    }
+
+    placeRedFrogInVillage() {
+        console.log(this);
+        $('.village').hide();
+        $('.pick').off("click", this.placeRedFrogInVillage);
+        //place frog in village
+        this.village.addFrog(this.getFrogByColorThisTurn("red"));
+
+        //place rest of frogs in bag
+        this.bagFrogs();
+        console.log('red frog village');
+    }
+
+    placeBlueFrogInVillage() {
+        $('.village').hide();
+        $('.pick').off("click", this.placeBlueFrogInVillage);
+        //pick a card
+
+        console.log('blue', this);
+        this.village.addFrog(this.getFrogByColorThisTurn("blue"));
+        //place rest of frogs in bag
+        this.bagFrogs();
+
+        //get cards
+        console.log('blue frog village')
+        this.alternatePlayer();
+    }
+
+    placeYellowFrogInVillage() {
+        $('.village').hide();
+        $('.pick').off("click", this.placeYellowFrogInVillage);
+        //trade frogs
+
+        this.village.addFrog(this.getFrogByColorThisTurn("yellow"));
+        this.rechooseModal();
+
+        console.log('yellow frog village')
+        // this.getFrogFromVillage();
+        this.alternatePlayer();
+    }
+
+    keepFrogs() {
+        $('.village').hide();
+        $('.village-exit').off("click", this.keepFrogs);
+
+
+        //place rest of frogs in bag
+        this.bagFrogs();
+
+        console.log(this, 'keep frog village')
+
+        //place frogs in player
+        this.alternatePlayer();
+
+    }
+
+    rechooseModal() { //put yellow frog in village
+        $('.rechoose').show();
+        var selector = $(".frog-choose");
+        selector.empty();
+        var availableVillageFrogs= this.village.frogs;
+        if(availableVillageFrogs.red.length > 0) {
+            selector.append($('<button>').addClass("choose choose-red"));
+        }
+        if(availableVillageFrogs.yellow.length > 0) {
+            selector.append($('<button>').addClass("choose choose-yellow"));
+        }
+        if(availableVillageFrogs.blue.length > 0) {
+            selector.append($('<button>').addClass("choose choose-blue"));
+        }
+        this.rechooseFrog = this.rechooseFrog.bind(this);
+        $('.choose').on('click', this.rechooseFrog);
+        
+        //place rest of frogs in bag
+        this.bagFrogs();
+
+    }
+
+    rechooseFrog() {
+        $('.choose').off('click', this.rechooseFrog);
+        $('.rechoose').hide();
+        var element = $(event.currentTarget);
+        console.log(element, $(element))
+        var color = null;
+        if(element.hasClass("choose-red")) {
+            color = "red";
+        }
+        else if (element.hasClass("choose-yellow")) {
+            color = "yellow";
+        }
+        else if (element.hasClass("choose-blue")) {
+            color = "blue";
+        }
+        this.getFrogByColorThisTurn.push(this.village.getFrog(color));
+        this.bagFrogs()
+        
+        this.handleCellClick();
+    }
+
+    colorsInFroglist(froglist) {
+        var red = false;
+        var blue = false;
+        var yellow = false;
+
+        for(var i = 0; i < froglist.length; i++) {
+            if(froglist[i].color === 'red') {
+                red = true;
+            }
+            else if (froglist[i].color === 'blue') {
+                blue = true;
+            }
+            else if(froglist[i].color === 'yellow') {
+                yellow = true;
+            }
+        }
+        return {'red': red, 'blue': blue, 'yellow': yellow};
+    }
     findValidMoves(frog) {
         this.possibleActions = [];
-        var currentPosition = frog.getPosition(); 
+        var currentPosition = frog.getPosition(); // {x: this.x, y: this.y}; {x: 1, y: 1}
 
-        var up = this.checkInDirection(currentPosition.row, currentPosition.col, "up"); 
-        var down = this.checkInDirection(currentPosition.row, currentPosition.col, "down"); 
-        var left = this.checkInDirection(currentPosition.row, currentPosition.col, "left"); 
+        var up = this.checkInDirection(currentPosition.row, currentPosition.col, "up"); // {row: 1, col:2}
+        var down = this.checkInDirection(currentPosition.row, currentPosition.col, "down"); // {row:1, col:0}
+        var left = this.checkInDirection(currentPosition.row, currentPosition.col, "left"); // {row:-1, col:0}
         var right = this.checkInDirection(currentPosition.row, currentPosition.col, "right");
 
-        var directions = [Object.assign({}, up), 
-                          Object.assign({}, down), 
-                          Object.assign({}, left), 
-                          Object.assign({}, right)];
-
-        var nextDirection = [Object.assign({}, up), 
-                             Object.assign({}, down), 
-                             Object.assign({}, left), 
-                             Object.assign({}, right)];
-
+        var directions = [this.clone(up), this.clone(down), this.clone(left), this.clone(right)];
+        var nextDirection = [this.clone(up), this.clone(down), this.clone(left), this.clone(right)];
         var stringDir = ["up", "down", "left", "right"];
         for(var i = 0; i < directions.length; i++) {
             if(this.isInbound(directions[i].row, directions[i].col) && this.isFrog(this.board[directions[i].row][directions[i].col])) {
@@ -174,7 +354,12 @@ class Board {
             return true;
         }
 
+        // if relative direction.x < 0 || relativeDirection.x > 9 || relativeDirection.y < 0 || relativeDirection.y > 9 { relativeDirection = false;}
+        // if relativeDirection is undefined (empty tile) => false
+        // if relativeDirection of frog at relativePosition is another frog => false
     }
+
+
     checkInDirection(row, col, direction) {
         //used by find valid moves for the current player
         const up = {row: 0, col: -1};
@@ -194,13 +379,14 @@ class Board {
         else if(direction === 'right'){
             return {row: row + right.row, col: col + right.col};
         }
+
     }
+
 
 
     isInbound(row, col) {
         return (row < this.rows && row >= 0  && col >= 0 && col < this.columns)
     }
-
 
     isFrog(frog) {
         if(frog && frog.constructor === Frog){
@@ -232,7 +418,6 @@ class Board {
         for(var i = 0; i < this.possibleActions.length; i++) {
             var coordinates = this.possibleActions[i]['target'];
             var selector = $('div.tile[data-row=' + coordinates[0] + '][data-col=' + coordinates[1] + '] div.leaf');
-            // console.log(selector);
             selector.addClass('choice');
         }
     }
@@ -241,26 +426,21 @@ class Board {
         $('div.leaf').removeClass('choice');
     }
 
+    clone(src) {
+        return Object.assign({}, src);
+    }
 
     isValidEndMove(frog){
 
-            var currentPosition = frog.getPosition(); 
+            var currentPosition = frog.getPosition(); // {x: this.x, y: this.y}; {x: 1, y: 1}
 
             var up = this.checkInDirection(currentPosition.row, currentPosition.col, "up"); // {row: 1, col:2}
-            var down = this.checkInDirection(currentPosition.   row, currentPosition.col, "down"); // {row:1, col:0}
+            var down = this.checkInDirection(currentPosition.row, currentPosition.col, "down"); // {row:1, col:0}
             var left = this.checkInDirection(currentPosition.row, currentPosition.col, "left"); // {row:-1, col:0}
             var right = this.checkInDirection(currentPosition.row, currentPosition.col, "right");
 
-            var directions = [Object.assign({}, up), 
-                              Object.assign({}, down), 
-                              Object.assign({}, left), 
-                              Object.assign({}, right)];
-
-            var nextDirection = [Object.assign({}, up), 
-                                 Object.assign({}, down), 
-                                 Object.assign({}, left), 
-                                 Object.assign({}, right)];
-  
+            var directions = [this.clone(up), this.clone(down), this.clone(left), this.clone(right)];
+            var nextDirection = [this.clone(up), this.clone(down), this.clone(left), this.clone(right)];
             var stringDir = ["up", "down", "left", "right"];
             for (var i = 0; i < directions.length; i++) {
                 if (this.isInbound(directions[i].row, directions[i].col) && this.isFrog(this.board[directions[i].row][directions[i].col])) {
@@ -273,7 +453,7 @@ class Board {
             return false;
     }
 
-    winCondition(){
+    winCondition(type){
         var allFalse = true;
         var maxScoreReached = false;
         if (this.playerArray[0].calculateScore() > 40 || this.playerArray[1].calculateScore() > 40){
@@ -290,11 +470,11 @@ class Board {
             }
         }
         if (maxScoreReached || allFalse){
+        // if(allFalse){
             return true;
         }else {
             return false;
         }
 
     }
-
 }

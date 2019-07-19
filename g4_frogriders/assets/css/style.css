@@ -12,6 +12,7 @@ header{
   text-align: center;
   font-size: 200%;
   margin: 10px auto;
+  border-radius: 8px;
 }
 
 .gameBoard {
@@ -19,40 +20,48 @@ header{
   width: 810px;
   position: relative;
   border: 1px solid green;
-  margin: 0 auto;
-  display: block;
+  /* float: left; */
+  margin: 0px auto;
+  display: inline-block;
+  vertical-align: top;
   background-color: rgb(93, 93, 255);
 }
 
 .stats{
   width: 70%;
-  height: 40px;
+  height: 44px;
   background-color: chartreuse;
   position: relative;
+  /* left:5%;
+  bottom: 1px; */
   margin: 10px auto;
-  display: block;
-  margin: 4px auto;
+  display: flex;
+  justify-content: space-evenly;
+  align-content: center;
+  border-radius: 10px;
 
 }
 
-.player1{
-  height:34px;
-  width: 60px;
-  float:left;
+.player{
+  height:30px;
+  width: 150px;
   background-color: coral;
-  margin: 4px;
-}
-.player2{
-  height: 34px;
-  width: 60px;
-  float: right;
-  background-color: coral;
-  margin: 4px;
+  border: white thin solid;
+  align-self: center;
+  align-content: center;
+  justify-content: space-around;
+  display: inline-flex;
 }
 
-#player1, #player2{
-  text-align: center;
-  margin:7px;
+div[id^='player']{
+  width: 50px;
+  height: 25px;
+  align-self: center;
+  background-color: tan;
+  display: inline-flex;
+  border: white solid thin;
+  justify-content: center;
+  border-radius: 4px;
 }
 
 .tile{
@@ -61,22 +70,28 @@ header{
   float: left;
   position: relative;
   margin:1px;
+
+
 }
-.leaf{
-  background-color: rgb(33, 180, 33);
-  border-radius: 15px;
+
+.tile > *{
   height: 100%;
   width: 100%;
   position: absolute;
 }
+.leaf{
+  background-color: rgb(33, 180, 33);
+  border-radius: 15px;
+}
 .frog{
   height: 60%;
   width: 60%;
+  /* background-color: aquamarine; */
   border-radius: 50%;
   left: 19px;
   top: 19px;
   background-size: 100%;
-  position: absolute;
+  /* background-image: url(../images/red.png); */
 }
 
 .red {
@@ -100,57 +115,222 @@ header{
 }
 
 .choice {
-    animation: pulse 2s infinite;
+    background-color: greenyellow;
+
 }
 
-@keyframes pulse {
-  0% {
-    background-color:rgb(14, 206, 55);
-  }
-  50% {
-    background-color: greenyellow;
-  }
+.card-slot {
+    width :180px;
+    height: 100px;
+    margin: 10px;
+    background-color: cyan;
+    border: thick white solid;
+    display: inline-block;
+    margin-left: 50px;
+    border-radius:25px;
 
-  100% {
-    background-color: rgb(14, 206, 55);
-
-  }
 }
 .center.choice {
     background-color: rgb(245, 196, 105);
 }
+
+.cards {
+    margin-top: 30px;
+    width: 20vw;
+    height: 60vh;
+    display: inline-block;
+    vertical-align: top;
+    /* background-color:orange; */
+}
+
+.boardContainer {
+    height: 810px;
+    width: 820px;
+		display: inline-flex;
+		position: relative
+    /* background-color: red; */
+}
+
+.pond-container {
+	height: 800px;
+	width: 200px;
+	left: 3%;
+	display: inline-flex;
+	/* justify-self: flex-start; */
+	vertical-align: top;
+	position: relative;
+	font-size: 30px;
+	color: white;
+
+}
+
+#red-pond, #blue-pond, #yellow-pond {
+	height: 100px;
+	width: 100px;
+	display: inline-flex;
+	/* align-self: center;
+	justify-self: center; */
+	background-size: cover;
+	/* align-self: auto; */
+	
+}
+
+#villageBlue, #villageRed, #villageYellow {
+	display: inline-flex;
+}
+
+.pond-area {
+	display: inline-flex;
+	position: relative;
+	align-items: center;
+	justify-content: space-evenly;
+	flex-direction: column;
+	background-color: lightseagreen;
+	height: 40vh;
+	width: 100%;
+	top: 20px;
+	border-radius: 40px;
+}
+
+div.puddle-container {
+	font-size: 30pt;
+
+}
+/* modal elements */
 #modalShadow{
-  position: fixed;
-  left: 0;
-  top: 0;
-  height: 100vh;
-  width: 100vw;
-  background-color: black;
-  opacity: 0.4;
+	position: fixed;
+	left: 0;
+	top: 0;
+	height: 100vh;
+	width: 100vw;
+	background-color: black;
+	opacity: 0.4;
 }
 #modalBody{
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  height: 280px;
-  width: 400px;
-  transform: translate(-50%, -50%);
-  background-color: lightgreen;
-  border-radius:10%;
-  background-image: url(../images/hypnoToad.gif);
-  background-position: cover;
-  background-repeat: no-repeat;
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	height: 280px;
+	width: 400px;
+	transform: translate(-50%, -50%);
+	background-color: lightgreen;
+	border-radius:10%;
+	background-position: cover;
+	background-repeat: no-repeat;
+	/* display: flex; */
 }
 #modalMessage{
-  font-size: 200%;
-  color: white;
-  position: relative;
-  text-align: center;
-  top: 50px;
+	font-size: 200%;
+	color: white;
+	position: relative;
+	text-align: center;
+	top: 50px;
 }
 #modalButton{
-  position: absolute;
-  margin: 5px auto;
-  bottom: 5px;
-  left: 16vmin;
+	position: absolute;
+	margin: 5px auto;
+	bottom: 5px;
+	left: 16vmin;
+	padding: 15px;
+	background-color: tan;
+	border: white medium solid;
+	border-radius: 8px;
+	font-family: 'Concert One', cursive;
+}
+
+.shadow {
+	position: fixed;
+	height: 100vh;
+	width: 100vw;
+	left: 0;
+	top: 0;
+	/* background-color: black; */
+	/* opacity: .4; */
+}
+
+.frog-select {
+	position: fixed;
+	width: 600px;
+	height: 400px;
+	top: 50%;
+	left: 50%;
+	margin-top: -200px; /* Negative half of height. */
+	margin-left: -300px; /* Negative half of width. */
+	border-radius: 45px;
+	background-color: grey;
+	border: white thick solid;
+	opacity: 1;
+}
+
+.village.header {
+	font-size: 200%;
+	color: white;
+	position: relative;
+	left:80px;
+	top: 60px;
+	height: 180px;
+}
+
+.rechoose.header{
+	font-size: 200%;
+	color: white;
+	position: relative;
+	left:120px;
+	top: 60px;
+	height: 180px;
+}
+.pick, .choose {
+  height: 88px;
+	width: 88px;
+	display: inline-block;
+	position: relative;
+	background-color: green;
+	border-radius: 15px;
+	border: white thick solid;
+}
+
+.pick-red, .choose-red {
+	background-image: url(../images/red.png)
+}
+
+.pick-blue, .choose-blue {
+	background-image: url(../images/blue.png)
+}
+
+.pick-yellow, .choose-yellow {
+	background-image: url(../images/yellow.png)
+}
+
+div.frog-options, div.frog-choose{
+	width: 100%;
+	height: 120px;
+	display: flex;
+	justify-content:space-evenly;
+
+}
+
+button.village-exit {
+	position: relative;
+	top: 20px;
+	left: 270px;
+	padding: 15px;
+	background-color: tan;
+	border: white medium solid;
+	border-radius: 8px;
+	font-family: 'Concert One', cursive;
+}
+
+div[id^='player'].currentPlayer {
+	background-color: whitesmoke;
+}
+
+.fan-cards {
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex;
+    height: 94vh;
+    width: 100vw;
+    background-color: blue;
+    opacity: .5;
 }

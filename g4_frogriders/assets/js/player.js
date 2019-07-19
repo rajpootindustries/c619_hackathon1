@@ -7,6 +7,7 @@ class Player {
         this.frogBag.brown = 0;
         this.frogBag.yellow = 0;
         this.frogBag.blue = 0;
+        this.bag = {"red": [], "blue": [], "yellow": [], "brown": []};
     }
     setScore(score){
         this.score += score;
@@ -17,7 +18,6 @@ class Player {
     calculateScore(){ // simplified rules
         // ☺return Object.values(this.frogBag).reduce((accumulator, currentValue) => accumulator + currentValue);
         return parseInt(this.frogBag.red) + parseInt(this.frogBag.brown) + parseInt(this.frogBag.yellow) + parseInt(this.frogBag.blue);
-
     }
     setFrogBag(color){
         if(color === 'red'){
@@ -38,6 +38,11 @@ class Player {
     }
     getFrogBag(){
         return this.frogBag;
+    }
+
+    keep(frog) {
+        var frogColor = frog.getColor();
+        this.bag[frogColor].push(frog);
     }
 
 }
