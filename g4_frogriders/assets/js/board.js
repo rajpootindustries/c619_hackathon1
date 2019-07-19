@@ -1,5 +1,5 @@
 class Board {
-    constructor() {
+    constructor(players) {
         this.board = [];
         this.rows = 9;
         this.columns = 9;
@@ -8,11 +8,11 @@ class Board {
         this.currentPlayer = 0;
         this.possibleActions = [];
         this.firstSelectedFrog = null;
-        this.resetGame = this.resetGame.bind(this); // ?
         this.modal = new Modal('#modalShadow', "#modalBody", "#modalMessage", "#modalButton");
         
         this.initializeApp = initializeApp;
-        
+        this.addPlayers(players);
+        this.initializeBoard();
     }
 
     initializeBoard() {
@@ -22,7 +22,7 @@ class Board {
 
         //populates board by creating a 2d array representind the board on the DOM
         for(var col = 0; col < this.columns; col++) {
-            this.board.push(new Array(this.row))
+            this.board.push(new Array(this.rows))
         }
 
         // var tileContainer = $('<div>').addClass('tileContainer')
@@ -60,30 +60,23 @@ class Board {
     }
 
 
-    addPlayer(player) {
-        this.playerArray.push(new Player(player));
-        //adds player to the beginning of game
-        //change the names of the players
-        //returns nothing
-
+    addPlayers(players) {
+        for(var i = 0; i < players.length; i++) {
+            this.playerArray.push(new Player(players[i]));
+        }
     }
 
     alternatePlayer() {
-        //gets the next player and sets it as current player
-        //returns nothing
         if(this.currentPlayer < this.playerArray.length-1) {
             this.currentPlayer++;
-            console.log(this.currentPlayer);
         }
         else {
             this.currentPlayer = 0;
-            console.log('else statement alternatePlayer', this.currentPlayer);
         }
 
     }
 
     handleCellClick() {
-
         var tile = event.currentTarget
         var col = parseInt($(tile).attr('data-col'));
         var row = parseInt($(tile).attr('data-row'));
@@ -100,19 +93,17 @@ class Board {
         }
         else {
             //click on one of the possible actions
-            //if tile is one of the possible actions remove frog in between
             for (var i = 0; i < this.possibleActions.length; i++) {
                 var action_row = this.possibleActions[i]['target'][0];
                 var action_col = this.possibleActions[i]['target'][1];
-                // console.log(action_row, row, action_col, col);
+
                 if(action_row === row && action_col === col) {
                     console.log('clicked right one');
 
-                    // console.log(this.possibleActions);
                     var target_row = this.possibleActions[i]['middle'][0];
                     var target_col = this.possibleActions[i]['middle'][1];
-                    // console.log(this.possibleActions);
-                    //give frog to player, or the points of the frog
+
+                    //give the points of the frog
                     var removedFrog = this.popFrog(this.board[target_row][target_col]);
                     this.possibleActions = [];
                     this.playerArray[this.currentPlayer].setFrogBag( removedFrog.getColor() );
@@ -120,20 +111,15 @@ class Board {
 
                     //move frog
                     var frogThatJumped = this.popFrog(this.firstSelectedFrog);
-                    // console.log('ftj', frogThatJumped);
                     this.setFrog(frogThatJumped, action_row, action_col)
 
                     if(this.board[action_row][action_col] && this.findValidMoves(this.board[action_row][action_col]) ) {
                         this.clearTiles();
                         this.colorTiles();
-                        console.log('test', this.playerArray[this.currentPlayer].calculateScore())
                         $('#player' + (this.currentPlayer+1)).text(this.playerArray[this.currentPlayer].calculateScore());
-                        console.log(this.currentPlayer, this.playerArray);
                     }
                     else {
                         this.clearTiles();
-                        //clear coloring
-                        //change player
 
                         $('#player'+(this.currentPlayer+1)).text(this.playerArray[this.currentPlayer].calculateScore());
                         this.alternatePlayer();
@@ -141,13 +127,12 @@ class Board {
                     }
                 }
                 else {
-                    console.log("clicked the wrong one");
+                    // clicked invalid tile
                 }
             }
         }
-        console.log(this.winCondition());
+
         if(this.winCondition()){
-            //endgame, modal
             this.modal.updateMessage('Player One Wins');
             this.modal.show();
         }
@@ -155,15 +140,23 @@ class Board {
 
     findValidMoves(frog) {
         this.possibleActions = [];
-        var currentPosition = frog.getPosition(); // {x: this.x, y: this.y}; {x: 1, y: 1}
+        var currentPosition = frog.getPosition(); 
 
-        var up = this.checkInDirection(currentPosition.row, currentPosition.col, "up"); // {row: 1, col:2}
-        var down = this.checkInDirection(currentPosition.row, currentPosition.col, "down"); // {row:1, col:0}
-        var left = this.checkInDirection(currentPosition.row, currentPosition.col, "left"); // {row:-1, col:0}
+        var up = this.checkInDirection(currentPosition.row, currentPosition.col, "up"); 
+        var down = this.checkInDirection(currentPosition.row, currentPosition.col, "down"); 
+        var left = this.checkInDirection(currentPosition.row, currentPosition.col, "left"); 
         var right = this.checkInDirection(currentPosition.row, currentPosition.col, "right");
 
-        var directions = [this.clone(up), this.clone(down), this.clone(left), this.clone(right)];
-        var nextDirection = [this.clone(up), this.clone(down), this.clone(left), this.clone(right)];
+        var directions = [Object.assign({}, up), 
+                          Object.assign({}, down), 
+                          Object.assign({}, left), 
+                          Object.assign({}, right)];
+
+        var nextDirection = [Object.assign({}, up), 
+                             Object.assign({}, down), 
+                             Object.assign({}, left), 
+                             Object.assign({}, right)];
+
         var stringDir = ["up", "down", "left", "right"];
         for(var i = 0; i < directions.length; i++) {
             if(this.isInbound(directions[i].row, directions[i].col) && this.isFrog(this.board[directions[i].row][directions[i].col])) {
@@ -181,9 +174,6 @@ class Board {
             return true;
         }
 
-        // if relative direction.x < 0 || relativeDirection.x > 9 || relativeDirection.y < 0 || relativeDirection.y > 9 { relativeDirection = false;}
-        // if relativeDirection is undefined (empty tile) => false
-        // if relativeDirection of frog at relativePosition is another frog => false
     }
     checkInDirection(row, col, direction) {
         //used by find valid moves for the current player
@@ -204,14 +194,13 @@ class Board {
         else if(direction === 'right'){
             return {row: row + right.row, col: col + right.col};
         }
-
     }
-
 
 
     isInbound(row, col) {
         return (row < this.rows && row >= 0  && col >= 0 && col < this.columns)
     }
+
 
     isFrog(frog) {
         if(frog && frog.constructor === Frog){
@@ -232,7 +221,6 @@ class Board {
     }
 
     setFrog(frog, row, col) {
-        // console.log('setfrog', frog, row, col)
         var element = frog.getFrog();
         var selector = $('div.tile[data-row=' + row + '][data-col=' + col + ']');
         frog.setPosition(row, col);
@@ -253,21 +241,26 @@ class Board {
         $('div.leaf').removeClass('choice');
     }
 
-    clone(src) {
-        return Object.assign({}, src);
-    }
 
     isValidEndMove(frog){
 
-            var currentPosition = frog.getPosition(); // {x: this.x, y: this.y}; {x: 1, y: 1}
+            var currentPosition = frog.getPosition(); 
 
             var up = this.checkInDirection(currentPosition.row, currentPosition.col, "up"); // {row: 1, col:2}
-            var down = this.checkInDirection(currentPosition.row, currentPosition.col, "down"); // {row:1, col:0}
+            var down = this.checkInDirection(currentPosition.   row, currentPosition.col, "down"); // {row:1, col:0}
             var left = this.checkInDirection(currentPosition.row, currentPosition.col, "left"); // {row:-1, col:0}
             var right = this.checkInDirection(currentPosition.row, currentPosition.col, "right");
 
-            var directions = [this.clone(up), this.clone(down), this.clone(left), this.clone(right)];
-            var nextDirection = [this.clone(up), this.clone(down), this.clone(left), this.clone(right)];
+            var directions = [Object.assign({}, up), 
+                              Object.assign({}, down), 
+                              Object.assign({}, left), 
+                              Object.assign({}, right)];
+
+            var nextDirection = [Object.assign({}, up), 
+                                 Object.assign({}, down), 
+                                 Object.assign({}, left), 
+                                 Object.assign({}, right)];
+  
             var stringDir = ["up", "down", "left", "right"];
             for (var i = 0; i < directions.length; i++) {
                 if (this.isInbound(directions[i].row, directions[i].col) && this.isFrog(this.board[directions[i].row][directions[i].col])) {
@@ -303,21 +296,5 @@ class Board {
         }
 
     }
-    resetGame(){
-        
-        // reset all game properties / variables
-        // call initialize board
 
-
-        // this.board = [];
-        // this.rows = 9;
-        // this.columns = 9;
-        // this.removedFrogs = {"red": null, "blue": null, "yellow": null, "brown": null};
-        // this.playerArray = [];
-        // this.currentPlayer = 0;
-        // this.possibleActions = [];
-        // this.firstSelectedFrog = null;
-        // this.modal = new Modal('#modalShadow', "#modalBody", "#modalMessage", "#modalButton" );
-        // this.initializeBoard();
-    }
 }
