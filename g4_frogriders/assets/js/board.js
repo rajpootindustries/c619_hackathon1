@@ -59,6 +59,11 @@ class Board {
         $('.tile').on('click', '.leaf', this.handleCellClick);
         $('.tile').on('click', '.frog', this.handleCellClick);
 
+        for(var i = 0; i < this.playerArray.length; i++) {
+            this.playerArray[i].score = 0;
+            this.playerArray[i].frogBag = {'red': 0, 'yellow': 0, 'blue': 0, 'brown': 0}; 
+            this.updateScore(i);
+        }
         //initialize players
         $('#player' + (this.currentPlayer+1)).addClass('currentPlayer')
         // this.currentPlayer = 0;
@@ -127,7 +132,7 @@ class Board {
                     var frogThatJumped = this.popFrog(this.firstSelectedFrog);
                     this.setFrog(frogThatJumped, action_row, action_col)
 
-                    $('#player' + (this.currentPlayer+1)).text(this.playerArray[this.currentPlayer].calculateScore());
+                    this.updateScore(this.currentPlayer);
 
                     if(this.board[action_row][action_col] && this.findValidMoves(this.board[action_row][action_col]) ) {
                         this.clearTiles();
@@ -153,6 +158,7 @@ class Board {
         if(this.winCondition()){
             //endgame, modal
             $('.endgame').show();
+
         }
     }
 
@@ -192,6 +198,10 @@ class Board {
 
         
     }
+    updateScore(currentPlayer){
+        $('#player' + (currentPlayer+1)).text(this.playerArray[currentPlayer].calculateScore());
+    }
+
     getFrogByColorThisTurn(color) {
         for(var i = 0; i < this.frogsThisTurn.length; i++) {
             if(this.frogsThisTurn[i].color === color) {
@@ -456,7 +466,7 @@ class Board {
     winCondition(type){
         var allFalse = true;
         var maxScoreReached = false;
-        if (this.playerArray[0].calculateScore() > 40 || this.playerArray[1].calculateScore() > 40){
+        if (this.playerArray[0].calculateScore() > 10 || this.playerArray[1].calculateScore() > 10){
             maxScoreReached = true;
         }
         for (var row = 0; row < this.rows; row++){

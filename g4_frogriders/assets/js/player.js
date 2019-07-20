@@ -2,11 +2,8 @@ class Player {
     constructor(name) {
         this.name = name;
         this.score = 0;
-        this.frogBag = {}; // stores number of frogs belonging to player {'red': 4, 'blue': 3}
-        this.frogBag.red = 0;
-        this.frogBag.brown = 0;
-        this.frogBag.yellow = 0;
-        this.frogBag.blue = 0;
+        this.frogBag = {'red': 0, 'yellow': 0, 'blue': 0, 'brown': 0}; // stores number of frogs belonging to player {'red': 4, 'blue': 3}
+
         this.bag = {"red": [], "blue": [], "yellow": [], "brown": []};
     }
     setScore(score){

@@ -11,29 +11,67 @@ header{
   background-color: aqua;
   text-align: center;
   font-size: 200%;
-  margin: 10px auto;
+  margin: 3% auto;
   border-radius: 8px;
 }
 
+
+.boardContainer {
+    height: 60vmin;
+    width: 60vmin;
+	display: inline-flex;
+	position: relative;
+    /* background-color: red; */
+}
 .gameBoard {
-  height: 810px;
-  width: 810px;
+  height: 100%;
+  width: 100%;
   position: relative;
   border: 1px solid green;
   /* float: left; */
   margin: 0px auto;
+  padding: 2%;
   display: inline-block;
   vertical-align: top;
   background-color: rgb(93, 93, 255);
 }
+
+.tile{
+	height: calc(100%/9.22);
+	width: calc(100%/9.22);
+	float: left;
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin:.1%;
+  }
+  
+.leaf{
+	background-color: rgb(33, 180, 33);
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	border-radius: 15px;
+}
+  
+.frog{
+	height: 60%;
+	width: 60%;
+	position: absolute;
+	/* background-color: aquamarine; */
+	border-radius: 50%;
+	background-size: 100%;
+	/* background-image: url(../images/red.png); */
+}	
 
 .stats{
   width: 70%;
   height: 44px;
   background-color: chartreuse;
   position: relative;
-  /* left:5%;
-  bottom: 1px; */
+  left:5%;
+  bottom: 9%;
   margin: 10px auto;
   display: flex;
   justify-content: space-evenly;
@@ -64,35 +102,7 @@ div[id^='player']{
   border-radius: 4px;
 }
 
-.tile{
-  height: 88px;
-  width: 88px;
-  float: left;
-  position: relative;
-  margin:1px;
 
-
-}
-
-.tile > *{
-  height: 100%;
-  width: 100%;
-  position: absolute;
-}
-.leaf{
-  background-color: rgb(33, 180, 33);
-  border-radius: 15px;
-}
-.frog{
-  height: 60%;
-  width: 60%;
-  /* background-color: aquamarine; */
-  border-radius: 50%;
-  left: 19px;
-  top: 19px;
-  background-size: 100%;
-  /* background-image: url(../images/red.png); */
-}
 
 .red {
     background-image: url(../images/red.png);
@@ -120,14 +130,14 @@ div[id^='player']{
 }
 
 .card-slot {
-    width :180px;
-    height: 100px;
-    margin: 10px;
+    width :20vmin;
+    height: 17%;
+    margin: 2%;
     background-color: cyan;
     border: thick white solid;
     display: inline-block;
-    margin-left: 50px;
-    border-radius:25px;
+    margin-left: 5vmin;
+    border-radius:10%;
 
 }
 .center.choice {
@@ -135,7 +145,7 @@ div[id^='player']{
 }
 
 .cards {
-    margin-top: 30px;
+    /* margin-top: 2%; */
     width: 20vw;
     height: 60vh;
     display: inline-block;
@@ -143,17 +153,10 @@ div[id^='player']{
     /* background-color:orange; */
 }
 
-.boardContainer {
-    height: 810px;
-    width: 820px;
-		display: inline-flex;
-		position: relative
-    /* background-color: red; */
-}
 
 .pond-container {
-	height: 800px;
-	width: 200px;
+	height: 70vh;
+	width: 15vw;
 	left: 3%;
 	display: inline-flex;
 	/* justify-self: flex-start; */
@@ -165,8 +168,8 @@ div[id^='player']{
 }
 
 #red-pond, #blue-pond, #yellow-pond {
-	height: 100px;
-	width: 100px;
+	height: 10vmin;
+	width: 10vmin;
 	display: inline-flex;
 	/* align-self: center;
 	justify-self: center; */
@@ -331,6 +334,9 @@ div[id^='player'].currentPlayer {
     display: flex;
     height: 94vh;
     width: 100vw;
-    background-color: blue;
-    opacity: .5;
+    background-color: grey;
+	opacity: .5;
+	display: none;
 }
+
+div['']
