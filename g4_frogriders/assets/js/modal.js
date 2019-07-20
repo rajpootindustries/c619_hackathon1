@@ -13,13 +13,12 @@ class Modal {
         this.modalShadow.show();
         this.modalBody.show();
         this.modalButton.show();
-        console.log("show()");
     }
     hide(){
         this.modalShadow.hide();
         this.modalBody.hide();
         this.modalButton.hide();
-        console.log(this.modalMessage, "hide");
+        
     }
     updateMessage(modalTxt){
         this.modalMessage.text(modalTxt);
@@ -30,7 +29,4 @@ class Modal {
         this.modalButton.on('click', initializeApp);
         this.modalButton.on('click', this.hide);
     }
-
-    
-    
 }

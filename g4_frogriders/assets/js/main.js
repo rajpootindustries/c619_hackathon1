@@ -6,3 +6,4 @@ function initializeApp() {
     gameBoard.addPlayer('Elon');
     gameBoard.initializeBoard();
 }
+

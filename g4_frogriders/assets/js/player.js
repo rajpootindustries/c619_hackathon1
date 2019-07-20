@@ -39,5 +39,4 @@ class Player {
     getFrogBag(){
         return this.frogBag;
     }
-
 }
