@@ -1,7 +1,8 @@
 class Card {
-    constructor() {
-        this.cover;
-        this.type; 
+    constructor(frogs, points) {
+        
+        this.trophyPoints = 0; 
+        this.frogsColors = {"red": 0, "yellow": 0, "blue": 0, "brown": 0};
 
         /*
             public: 1 red 1 blue 3 trophy
@@ -25,24 +26,5 @@ class Card {
                       1 red 1 yellow 1 brown, 4 (x1)
                       1 blue, 1 brown, 
         */
-        this.ability = null; // move, conditional, fixed
-        this.trophyPoints = 0; 
-        this.frogsColors = {"red": 0, "yellow": 0, "blue": 0};
     }
-
-    createPrivilageCard() {
-        this.type = "privilage";
-        //place four cards on the board at the start of the game
-    }
-
-    createPublicCard() {
-        this.type = "public";
-        //puts two public cards onto the board at the start of the game
-    }
-
-    createPrivateSetCard() {
-        this.type= "private";
-        //each player gets two at the start of the game
-    }
-
 }

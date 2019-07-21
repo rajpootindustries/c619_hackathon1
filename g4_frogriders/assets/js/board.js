@@ -59,17 +59,43 @@ class Board {
         $('.tile').on('click', '.leaf', this.handleCellClick);
         $('.tile').on('click', '.frog', this.handleCellClick);
 
+        //hide player cards modal
+        $('.fan-cards').hide();
+        $('.player').on('mouseover', this.displayPlayerCards);
+        $('.fan-cards').on('click', this.hidePlayerCards);
+
         for(var i = 0; i < this.playerArray.length; i++) {
             this.playerArray[i].score = 0;
             this.playerArray[i].frogBag = {'red': 0, 'yellow': 0, 'blue': 0, 'brown': 0}; 
             this.updateScore(i);
         }
         //initialize players
+        $('div[id^="player"]').removeClass('currentPlayer');
         $('#player' + (this.currentPlayer+1)).addClass('currentPlayer')
         // this.currentPlayer = 0;
+
+        //fill board with cards
+        this.addCardstoBoard();
     }
 
+    addCardstoBoard() {
+        if()
+    }
 
+    displayPlayerCards() {
+        var playerNum = $(event.currentTarget).children().attr('id');
+        $('.fan-cards').show();
+        $('div[class^="fan-player"]').addClass('hidden');
+        $('div[class^="fan-player' + playerNum[6] +'"]').removeClass('hidden')
+        
+        console.log(playerNum)
+    }
+
+    hidePlayerCards() {
+        $('.fan-cards').hide();
+    }
+
+    
     addPlayer(player) {
         this.playerArray.push(new Player(player));
         //adds player to the beginning of game
@@ -130,6 +156,10 @@ class Board {
 
                     //move frog
                     var frogThatJumped = this.popFrog(this.firstSelectedFrog);
+                    var splash = new Audio();
+                    splash.src = 'assets/sounds/splash.wav';
+                    splash.play();
+
                     this.setFrog(frogThatJumped, action_row, action_col)
 
                     this.updateScore(this.currentPlayer);
@@ -151,6 +181,10 @@ class Board {
                 }
                 else {
                     //clicked wrong tile
+                    console.log('wrong tile clicked');
+                    var croak = new Audio();
+                    croak.src = 'assets/sounds/croak.mp3';
+                    croak.play();
                 }
             }
         }
@@ -207,7 +241,6 @@ class Board {
             if(this.frogsThisTurn[i].color === color) {
                 var frog = this.frogsThisTurn[i];
                 this.frogsThisTurn.splice(i, 1);
-                console.log(this.frogsThisTurn, frog)
                 return frog;
             }
         }
@@ -221,7 +254,6 @@ class Board {
     }
 
     placeRedFrogInVillage() {
-        console.log(this);
         $('.village').hide();
         $('.pick').off("click", this.placeRedFrogInVillage);
         //place frog in village
@@ -229,34 +261,31 @@ class Board {
 
         //place rest of frogs in bag
         this.bagFrogs();
-        console.log('red frog village');
     }
 
     placeBlueFrogInVillage() {
         $('.village').hide();
         $('.pick').off("click", this.placeBlueFrogInVillage);
-        //pick a card
 
-        console.log('blue', this);
+        //pick a card
         this.village.addFrog(this.getFrogByColorThisTurn("blue"));
+
         //place rest of frogs in bag
         this.bagFrogs();
 
-        //get cards
-        console.log('blue frog village')
+        //TODO: get cards 
+
         this.alternatePlayer();
     }
 
     placeYellowFrogInVillage() {
         $('.village').hide();
         $('.pick').off("click", this.placeYellowFrogInVillage);
-        //trade frogs
 
+        //trade frogs
         this.village.addFrog(this.getFrogByColorThisTurn("yellow"));
         this.rechooseModal();
 
-        console.log('yellow frog village')
-        // this.getFrogFromVillage();
         this.alternatePlayer();
     }
 
@@ -267,8 +296,6 @@ class Board {
 
         //place rest of frogs in bag
         this.bagFrogs();
-
-        console.log(this, 'keep frog village')
 
         //place frogs in player
         this.alternatePlayer();
@@ -301,7 +328,7 @@ class Board {
         $('.choose').off('click', this.rechooseFrog);
         $('.rechoose').hide();
         var element = $(event.currentTarget);
-        console.log(element, $(element))
+
         var color = null;
         if(element.hasClass("choose-red")) {
             color = "red";
