@@ -110,7 +110,6 @@ class Deck {
                                 privilageCardArray[index][2]["points"],
                                 privilageCardArray[index][3]["type"])
     
-        console.log(newCard);
         return newCard;
     }
 

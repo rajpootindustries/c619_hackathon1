@@ -16,8 +16,9 @@ class Board {
 
     intializeBoard() {
         //clear old board
-        $('.gameBoard').empty()
-
+        $('.gameBoard').empty();
+        $('.frog-container').empty();
+        $('.card-container').empty();
         //populates board by creating a 2d array representind the board on the DOM
         for(var col = 0; col < this.columns; col++) {
             this.board.push(new Array(this.row))
@@ -109,6 +110,7 @@ class Board {
 
     displayPlayerCards() {
         var playerNum = $(event.currentTarget).children().attr('id');
+        console.log(playerNum);
         $('.fan-cards').show();
         $('div[class^="fan-player"]').addClass('hidden');
         $('div[class^="fan-player' + playerNum[6] +'"]').removeClass('hidden')
@@ -147,7 +149,6 @@ class Board {
         var col = parseInt($(tile).attr('data-col'));
         var row = parseInt($(tile).attr('data-row'));
         
-        console.log(col, row, event.currentTarget)
         if(this.possibleActions.length === 0) {
             var clickedFrog = this.board[row][col];
             this.firstSelectedFrog = clickedFrog;
@@ -273,7 +274,10 @@ class Board {
 
     bagFrogs() {
         while(this.frogsThisTurn.length > 0) {
-            this.playerArray[this.currentPlayer].keep(this.frogsThisTurn.shift());
+            var frog = this.frogsThisTurn.shift()
+            this.playerArray[this.currentPlayer].keep(frog);
+            var frogDOM = $('<div>').addClass('user-frog ' + frog.color);
+            $('div[class^="fan-player' + (this.currentPlayer + 1) +'"] div.frog-container').append(frogDOM);
         }
     }
 
@@ -307,11 +311,19 @@ class Board {
     }
 
     userSelectPrivilageCard() {
-        console.log(this.playerArray[this.currentPlayer], this.privilageDeck, event.currentTarget, 'lu')
         $(event.currentTarget).empty();
         $(event.currentTarget).addClass('empty');
 
+        //add card to modal
+        var playerIndex = $(event.currentTarget).data()['slotNum'] - 1;
+        var card = this.privilageDeck[this.privilageDeck.type][playerIndex];
+        this.playerArray[this.currentPlayer].privilageCards.push(card);
+        var playerModalSelector = $('div.fan-player' + (playerIndex + 1) + ' div.card-container');
+        var container = $('<div>').addClass('card-thumbnail');
+        container.append(card.createCardElement())
+        playerModalSelector.append(container);
 
+        
         $('.card-slot.privilage').removeClass('active');
         $('.card-slot.privilage').off('click', '.card', this.userSelectPrivilageCard);
         $('.tile').on('click', '.leaf', this.handleCellClick);
@@ -321,6 +333,7 @@ class Board {
         setTimeout(this.fillPrivilageCardSlots, 1000);
         this.alternatePlayer();
     }
+    
     placeYellowFrogInVillage() {
         $('.village').hide();
         $('.pick').off("click", this.placeYellowFrogInVillage);
@@ -329,7 +342,7 @@ class Board {
         this.village.addFrog(this.getFrogByColorThisTurn("yellow"));
         this.rechooseModal();
 
-        this.alternatePlayer();
+        
     }
 
     keepFrogs() {
@@ -385,6 +398,7 @@ class Board {
         }
         this.frogsThisTurn.push(this.village.getFrog(color));
         this.bagFrogs()
+        this.alternatePlayer();
  
     }
 
