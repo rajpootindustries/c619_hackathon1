@@ -22,6 +22,7 @@ header{
   margin: 0 auto;
   display: block;
   background-color: rgb(93, 93, 255);
+  padding: 6px;
 }
 
 .stats{
@@ -68,6 +69,9 @@ header{
   height: 100%;
   width: 100%;
   position: absolute;
+}
+.tile:hover > .leaf, .tile:hover > .frog {
+  background-color: rgb(4, 251, 177)
 }
 .frog{
   height: 60%;
@@ -116,6 +120,7 @@ header{
 
   }
 }
+
 .center.choice {
     background-color: rgb(245, 196, 105);
 }
