@@ -8,9 +8,6 @@
     <link rel="stylesheet" href="assets/css/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="assets/js/frog.js"></script>
-    <script src="assets/js/privateCard.js"></script>
-    <script src="assets/js/publicCard.js"></script>
-    <script src="assets/js/privilageCard.js"></script>
     <script src="assets/js/cards.js"></script>
     <script src="assets/js/deck.js"></script>
     <script src="assets/js/village.js"></script>
@@ -25,14 +22,23 @@
 <body>
     <header>Frogrider Online!</header>
     
+    <div class="mask"></div>
     <div class="cards">
-        <div class="card-slot"></div>
-        <div class="card-slot"></div>
-        <div class="card-slot"></div>
-        <div class="card-slot"></div>
-        <div class="card-slot"></div>
-        <div class="card-slot"></div>
+        <div class="card-slot privilage empty" data-slot-num='1'>
+            <div class="card">
+                <div class="card-points">2</div>
+                <div class="card-description"></div>
+            </div>
+        </div>
+            
+        <div class="card-slot privilage empty" data-slot-num='2'></div>
+        <div class="card-slot privilage empty" data-slot-num='3'></div>
+        <div class="card-slot privilage empty" data-slot-num='4'></div>
+        <div class="card-slot public" data-slot-num='1'>this is slot 1 for public</div>
+        <div class="card-slot public" data-slot-num='2'>this is slot 2 for public</div>
     </div>
+    
+    
     <div class="boardContainer">
         <div class="gameBoard"></div>
     </div>

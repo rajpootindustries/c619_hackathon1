@@ -5,6 +5,8 @@ class Player {
         this.frogBag = {'red': 0, 'yellow': 0, 'blue': 0, 'brown': 0}; // stores number of frogs belonging to player {'red': 4, 'blue': 3}
 
         this.bag = {"red": [], "blue": [], "yellow": [], "brown": []};
+        this.privateDeck = new Deck("private");
+        this.publicDeck = new Deck('public')
     }
     setScore(score){
         this.score += score;

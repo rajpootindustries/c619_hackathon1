@@ -1,8 +1,10 @@
 class Card {
-    constructor(frogs, points) {
+    constructor(frogsRequired, frogsGained, points, type) {
         
-        this.trophyPoints = 0; 
-        this.frogsColors = {"red": 0, "yellow": 0, "blue": 0, "brown": 0};
+        this.trophyPoints = points; 
+        this.frogsRequired = frogsRequired;
+        this.frogsGained = frogsGained;
+        this.type = type; // private or public or privilage
 
         /*
             public: 1 red 1 blue 3 trophy
@@ -26,5 +28,32 @@ class Card {
                       1 red 1 yellow 1 brown, 4 (x1)
                       1 blue, 1 brown, 
         */
+    }
+    createCardElement(type) {
+        var card = $('<div>').addClass('card ' + type);
+        var points = $('<div>').addClass('card-points').html(this.trophyPoints);
+        var description = $('<div>').addClass('card-description')
+ 
+        for (var color in this.frogsRequired) {
+            if (this.frogsRequired[color] !== 0) {
+                var textSnippet = $('<p>')
+                textSnippet.html(this.frogsRequired[color] + ' ' + color +  ' frogs')
+                description.append(textSnippet);
+            }
+        }
+        for (var color in this.frogsGained) {
+            if (this.frogsGained[color] !== 0) {
+                var textSnippet = $('<p>')
+                textSnippet.html('+' + this.frogsGained[color] + ' ' + color +  ' frogs')
+                description.append(textSnippet);
+            }
+        }
+
+        card.append(points);
+        card.append(description);
+
+        return card;
+
+        
     }
 }

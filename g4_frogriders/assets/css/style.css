@@ -137,7 +137,7 @@ div[id^='player']{
     border: thick white solid;
     display: inline-block;
     margin-left: 5vmin;
-    border-radius:10%;
+    border-radius:12px;
 
 }
 .center.choice {
@@ -332,6 +332,7 @@ button.village-exit {
 
 div[id^='player'].currentPlayer {
 	background-color: whitesmoke;
+	border: red solid medium;
 }
 
 .fan-cards {
@@ -368,4 +369,64 @@ div[class^="fan-player"] {
 
 .hidden {
 	visibility: hidden;
+}
+
+.card {
+	height: 100%;
+	width: 100%;;
+	/* background-color: bisque; */
+	border: black thin solid;
+	position: relative;
+	border-radius: 8px;
+}
+
+.card-points {
+	height: 40%;
+	width: 25%;
+	background-color: yellow;
+	position: relative;
+	margin: 2%;
+	border: grey medium solid;
+	border-radius: 5px;
+	font-size: 1.5rem;
+	text-align: center;
+	display: inline-block
+}
+
+.card-description {
+	height: 80%;
+	width: 60%;
+	margin-right: 3%;
+	margin-top: 6%;
+	border: grey solid medium;
+	background-color: aliceblue;
+	float: right;
+	vertical-align: top;
+	border-radius: 5px;
+	text-align: center;
+	font-size: .9rem;
+}
+
+.card-description p {
+	margin: 0px;
+}
+
+.privilage {
+	background-color: lightgoldenrodyellow;
+}
+
+.public {
+	background-color: lightcoral;
+}
+
+.active:hover {
+	border: red thick solid;
+	
+}
+
+.active {
+	transition-timing-function: ease;
+	transition: 1s;
+	box-shadow: rgb(14, 44, 70) 5px 5px;
+	
 }
