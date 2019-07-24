@@ -13,19 +13,20 @@ class Board {
         this.initializeApp = initializeApp;
         this.addPlayers(players);
         this.initializeBoard();
+
+        this.clearScore = this.clearScore.bind(this);
+
+        
     }
 
     initializeBoard() {
-        //clear old board
         $('.gameBoard').empty()
         this.modal.init();
 
-        //populates board by creating a 2d array representind the board on the DOM
         for(var col = 0; col < this.columns; col++) {
             this.board.push(new Array(this.rows))
         }
 
-        // var tileContainer = $('<div>').addClass('tileContainer')
         var colors = ['red', 'blue', 'yellow', 'brown'];
         for(var row = 0; row < this.rows; row++) {
             for(var col = 0; col < this.columns; col++) {
@@ -52,11 +53,22 @@ class Board {
 
             }
         }
+        
         this.handleCellClick = this.handleCellClick.bind(this);
         $('.tile').on('click', '.leaf', this.handleCellClick);
         $('.tile').on('click', '.frog', this.handleCellClick);
-        //initialize players
-        // this.currentPlayer = 0;
+        
+        
+    }
+
+    clearScore() {
+        console.log('cleared', this);
+        for(var index = 0; index < this.playerArray.length; index++) {
+            console.log(index)
+            this.playerArray[index].score = 0;
+            console.log($('#player' + (index+1)));
+            $('#player' + (index+1)).text(0);
+        }
     }
 
 
@@ -135,6 +147,8 @@ class Board {
         if(this.winCondition()){
             this.modal.updateMessage('Player One Wins');
             this.modal.show();
+            $('button#modalButton').click(this.clearScore);
+            
         }
     }
 
@@ -276,7 +290,7 @@ class Board {
     winCondition(){
         var allFalse = true;
         var maxScoreReached = false;
-        if (this.playerArray[0].calculateScore() > 40 || this.playerArray[1].calculateScore() > 40){
+        if (this.playerArray[0].calculateScore() > 10 || this.playerArray[1].calculateScore() > 40){
             maxScoreReached = true;
         }
         for (var row = 0; row < this.rows; row++){

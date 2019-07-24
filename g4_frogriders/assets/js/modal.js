@@ -13,7 +13,7 @@ class Modal {
         this.modalShadow.show();
         this.modalBody.show();
         this.modalButton.show();
-        console.log("show()");
+        console.log("show");
     }
     hide(){
         this.modalShadow.hide();
