@@ -82,8 +82,6 @@ class Board {
 
     addCardstoBoard() {
         var publicDeck = this.publicDeck.initializePublicCards();
-        // console.log(publicDeck.type, publicDeck, 'sup')
-        // console.log('testing', publicDeck, publicDeck[publicDeck.type]);
         for (var card = 0; card <  publicDeck[publicDeck.type].length; card++) {
             var cardDOM = publicDeck[publicDeck.type][card].createCardElement(publicDeck.type);
             var selector = $('.card-slot.public[data-slot-num="'+ (card + 1) + '"]');
@@ -110,7 +108,6 @@ class Board {
 
     displayPlayerCards() {
         var playerNum = $(event.currentTarget).children().attr('id');
-        console.log(playerNum);
         $('.fan-cards').show();
         $('div[class^="fan-player"]').addClass('hidden');
         $('div[class^="fan-player' + playerNum[6] +'"]').removeClass('hidden')
@@ -133,18 +130,21 @@ class Board {
     alternatePlayer() {
         //gets the next player and sets it as current player
         //returns nothing
+        console.log(this.currentPlayer, this.playerArray, this.playerArray.length)
         if(this.currentPlayer < this.playerArray.length-1) {
             this.currentPlayer++;
         }
         else {
             this.currentPlayer = 0;
         }
+        console.log('alternateplayers', this.currentPlayer);
         $('div[id^="player"]').removeClass('currentPlayer');
         $('#player' + (this.currentPlayer+1)).addClass('currentPlayer')
 
     }
 
     handleCellClick() {
+        console.log('click ', this.currentPlayer)
         var tile = event.currentTarget
         var col = parseInt($(tile).attr('data-col'));
         var row = parseInt($(tile).attr('data-row'));
@@ -165,7 +165,7 @@ class Board {
             for (var i = 0; i < this.possibleActions.length; i++) {
                 var action_row = this.possibleActions[i]['target'][0];
                 var action_col = this.possibleActions[i]['target'][1];
-                // console.log(action_row, row, action_col, col);
+
                 if(action_row === row && action_col === col) {
 
                     var target_row = this.possibleActions[i]['middle'][0];
@@ -206,7 +206,6 @@ class Board {
                 }
                 else {
                     //clicked wrong tile
-                    console.log('wrong tile clicked');
                     var croak = new Audio();
                     croak.src = 'assets/sounds/croak.mp3';
                     croak.play();
@@ -242,22 +241,27 @@ class Board {
 
         if(noVillageFrogs) {
             this.keepFrogs();
+            console.log('novillagefrogs', this);
         }
         else {
+            console.log('withvillagefrogs', this.currentPlayer, this);
             $('.village').show();
             this.placeRedFrogInVillage = this.placeRedFrogInVillage.bind(this);
             this.placeBlueFrogInVillage = this.placeBlueFrogInVillage.bind(this);
             this.placeYellowFrogInVillage = this.placeYellowFrogInVillage.bind(this);
+            $('.village-exit').unbind('click');
             this.keepFrogs = this.keepFrogs.bind(this);
             $('.pick-red').on("click", this.placeRedFrogInVillage);
             $('.pick-blue').on("click", this.placeBlueFrogInVillage);
             $('.pick-yellow').on("click", this.placeYellowFrogInVillage);
             $('.village-exit').on("click", this.keepFrogs);
+            console.log('lul found it ', $('.village-exit'));
         }
 
         
     }
     updateScore(currentPlayer){
+        console.log(currentPlayer);
         $('#player' + (currentPlayer+1)).text(this.playerArray[currentPlayer].calculateScore());
     }
 
@@ -282,6 +286,7 @@ class Board {
     }
 
     placeRedFrogInVillage() {
+        console.log('redfrog')
         $('.village').hide();
         $('.pick').off("click", this.placeRedFrogInVillage);
         //place frog in village
@@ -292,6 +297,7 @@ class Board {
     }
 
     placeBlueFrogInVillage() {
+        console.log('bluefrog');
         $('.village').hide();
         $('.tile').off('click', '.leaf', this.handleCellClick);
         $('.tile').off('click', '.frog', this.handleCellClick);
@@ -331,10 +337,12 @@ class Board {
 
         this.fillPrivilageCardSlots = this.fillPrivilageCardSlots.bind(this);
         setTimeout(this.fillPrivilageCardSlots, 1000);
+        console.log('userrpivialgecard alternate')
         this.alternatePlayer();
     }
-    
+
     placeYellowFrogInVillage() {
+        console.log('yellowfrog');
         $('.village').hide();
         $('.pick').off("click", this.placeYellowFrogInVillage);
 
@@ -346,19 +354,22 @@ class Board {
     }
 
     keepFrogs() {
+        console.log('keep frogs', this.currentPlayer, this.currentTarget)
         $('.village').hide();
-        $('.village-exit').off("click", this.keepFrogs);
+        $('.village-exit').off("click");
 
 
         //place rest of frogs in bag
         this.bagFrogs();
 
         //place frogs in player
+        console.log('keepfrogs alternate', this.currentPlayer)
         this.alternatePlayer();
 
     }
 
     rechooseModal() { //put yellow frog in village
+        console.log('rechooseModal')
         $('.rechoose').show();
         var selector = $(".frog-choose");
         selector.empty();
@@ -382,6 +393,7 @@ class Board {
     }
 
     rechooseFrog() {
+        console.log('rechoosefrog')
         $('.choose').off('click', this.rechooseFrog);
         $('.rechoose').hide();
         var element = $(event.currentTarget);
@@ -398,11 +410,13 @@ class Board {
         }
         this.frogsThisTurn.push(this.village.getFrog(color));
         this.bagFrogs()
+        console.log('rechoosefrog alternate')
         this.alternatePlayer();
  
     }
 
     colorsInFroglist(froglist) {
+        console.log('colorsinforglist')
         var red = false;
         var blue = false;
         var yellow = false;
@@ -421,6 +435,7 @@ class Board {
         return {'red': red, 'blue': blue, 'yellow': yellow};
     }
     findValidMoves(frog) {
+        console.log('findvalidmoves', this.currentPlayer)
         this.possibleActions = [];
         var currentPosition = frog.getPosition(); // {x: this.x, y: this.y}; {x: 1, y: 1}
 
